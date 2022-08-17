@@ -18,15 +18,18 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 public class Main {
-    private static String[] choices = Arrays.stream(FirmwareType.values()).map(name -> {return name.name().toLowerCase();}).filter(name -> {return !name.equals("unknown");} ).toArray(String[]::new);
+    private static String[] choices = Arrays.stream(FirmwareType.values()).map(name -> {
+        return name.name().toLowerCase();
+    }).filter(name -> {
+        return !name.equals("unknown");
+    }).toArray(String[]::new);
 
-    private static Namespace doArgParserstuff(String[] args){
+    private static Namespace doArgParserstuff(String[] args) {
         ArgumentParser parser = ArgumentParsers.newFor("Main")
                 .locale(Locale.ENGLISH)
                 .build()
-                .description("Generate fr_firmware.bin images for the Fimi X8 Mini");
+                .description("Generate x8m_all_fw.bin.bin images for the Fimi X8 Mini");
 
         parser.addArgument("-f")
                 .dest("fwfolder")
@@ -50,7 +53,7 @@ public class Main {
                 .type(String.class)
                 .nargs("+")
                 .choices(choices)
-                .help("The firmware types to include in fr_firmware.bin.\nOne or more types separated with space.");
+                .help("The firmware types to include in x8m_all_fw.bin.bin.\nOne or more types separated with space.");
 
         parser.addArgument("-c")
                 .dest("md5ignore")
@@ -64,12 +67,12 @@ public class Main {
                 .required(false)
                 .type(String.class)
                 .setDefault("")
-                .metavar("<fr_firmware.bin>")
+                .metavar("<x8m_all_fw.bin.bin>")
                 .help("Path to outputfile. Omit to create firmware in the working directory.");
 
         try {
             return parser.parseArgsOrFail(args);
-        } catch (Exception x){
+        } catch (Exception x) {
             System.exit(0);
         }
         return null;
@@ -89,35 +92,36 @@ public class Main {
         Path outputfile = Paths.get(res.getString("outputfile"));
         boolean md5ignore = res.getString("md5ignore").equalsIgnoreCase("MD5IGNORE");
 
-
-        if(!Files.isDirectory(fwfolder)){
+        if (!Files.isDirectory(fwfolder)) {
             try {
                 Files.createDirectory(fwfolder);
-            } catch (Exception x){
-                SimpleLogger.log(SimpleLogger.LogType.ERROR, "Could not find or create firmware folder" + fwfolder.toString() + "!");
+            } catch (Exception x) {
+                SimpleLogger.log(SimpleLogger.LogType.ERROR,
+                        "Could not find or create firmware folder" + fwfolder.toString() + "!");
                 System.exit(1);
             }
         }
 
-        if(inputfile.toString().isEmpty()){
-            SimpleLogger.log(SimpleLogger.LogType.INFO, "No firmare JSON file specified, will try to find one in: " + fwfolder);
+        if (inputfile.toString().isEmpty()) {
+            SimpleLogger.log(SimpleLogger.LogType.INFO,
+                    "No firmare JSON file specified, will try to find one in: " + fwfolder);
             try (Stream<Path> files = Files.walk(fwfolder)) {
                 List<Path> jsons = files
                         .filter(f -> f.getFileName().toString().endsWith(".jfproj"))
                         .collect(Collectors.toList());
-                if(jsons.size() == 1){
+                if (jsons.size() == 1) {
                     inputfile = jsons.get(0);
                 } else {
                     SimpleLogger.log(SimpleLogger.LogType.ERROR, "Could not find firmware JSON file.");
                     System.exit(1);
                 }
-            } catch (Exception x){
+            } catch (Exception x) {
                 x.printStackTrace();
                 System.exit(1);
             }
-        }
-        else if(inputfile.toString().equals("auto")) {
-            SimpleLogger.log(SimpleLogger.LogType.INFO, "No firmare JSON file specified, will try to get one from: " + UpdateUtil.fimi_api_url_de);
+        } else if (inputfile.toString().equals("auto")) {
+            SimpleLogger.log(SimpleLogger.LogType.INFO,
+                    "No firmare JSON file specified, will try to get one from: " + UpdateUtil.fimi_api_url_de);
             try {
                 inputfile = UpdateUtil.getFirmwareJsonFromServer(fwfolder);
                 SimpleLogger.log(SimpleLogger.LogType.DEBUG, "Done!");
@@ -125,18 +129,17 @@ public class Main {
                 e.printStackTrace();
                 System.exit(1);
             }
-        }
-        else if(!Files.exists(inputfile)){
+        } else if (!Files.exists(inputfile)) {
             SimpleLogger.log(SimpleLogger.LogType.ERROR, "File " + inputfile.toString() + " not found!");
             System.exit(1);
         }
 
         List<FirmwareType> firmwareTypes = new ArrayList<>();
-        if(updatetypes == null || updatetypes.isEmpty()){
-            SimpleLogger.log(SimpleLogger.LogType.INFO, "No firmware type specified, will only parse the firmware JSON file and try to download all missing FIMI X8 Mini firmware images");
-        }
-        else {
-            for(String choice : updatetypes) {
+        if (updatetypes == null || updatetypes.isEmpty()) {
+            SimpleLogger.log(SimpleLogger.LogType.INFO,
+                    "No firmware type specified, will only parse the firmware JSON file and try to download all missing FIMI X8 Mini firmware images");
+        } else {
+            for (String choice : updatetypes) {
                 FirmwareType type = FirmwareType.fromString(choice);
                 if (type != FirmwareType.UNKNOWN) {
                     firmwareTypes.add(type);
@@ -147,7 +150,6 @@ public class Main {
             }
         }
 
-
         try {
             List<UpfirewareDto> upfirewareDtos = UpdateUtil.UpfirewareDtosFromJSON(inputfile);
             SimpleLogger.log(SimpleLogger.LogType.DEBUG, "Got " + upfirewareDtos.size() + " firmwares.");
@@ -157,7 +159,7 @@ public class Main {
 
             List<FwInfo> fwInfos = UpdateUtil.toFwInfo(upfirewareDtos);
 
-            if(firmwareTypes.size() > 0) {
+            if (firmwareTypes.size() > 0) {
                 List<FwInfo> filteredFwInfos = new ArrayList<>();
 
                 for (FwInfo fwInfo : fwInfos) {
@@ -169,15 +171,18 @@ public class Main {
                         if (fwInfo.getFilename() != null) {
                             if (!md5ignore) {
                                 if (UpdateUtil.checkMD5(fwInfo)) {
-                                    SimpleLogger.log(SimpleLogger.LogType.DEBUG, fwInfo.getFilename().getFileName() + " passed MD5 check..");
+                                    SimpleLogger.log(SimpleLogger.LogType.DEBUG,
+                                            fwInfo.getFilename().getFileName() + " passed MD5 check..");
                                 } else {
-                                    SimpleLogger.log(SimpleLogger.LogType.ERROR, fwInfo.getFilename().getFileName() + " failed MD5 check.");
+                                    SimpleLogger.log(SimpleLogger.LogType.ERROR,
+                                            fwInfo.getFilename().getFileName() + " failed MD5 check.");
                                     System.exit(1);
                                 }
                             }
                             filteredFwInfos.add(fwInfo);
                         } else {
-                            SimpleLogger.log(SimpleLogger.LogType.ERROR, "Failed to get " + fwInfo.getFirmwareType() + " firmware.");
+                            SimpleLogger.log(SimpleLogger.LogType.ERROR,
+                                    "Failed to get " + fwInfo.getFirmwareType() + " firmware.");
                             System.exit(1);
                         }
                     }
