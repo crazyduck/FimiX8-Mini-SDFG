@@ -29,7 +29,7 @@ public class Main {
         ArgumentParser parser = ArgumentParsers.newFor("Main")
                 .locale(Locale.ENGLISH)
                 .build()
-                .description("Generate x8m_all_fw.bin.bin images for the Fimi X8 Mini");
+                .description("Generate x8m_all_fw.bin images for the Fimi X8 Mini");
 
         parser.addArgument("-f")
                 .dest("fwfolder")
@@ -53,7 +53,7 @@ public class Main {
                 .type(String.class)
                 .nargs("+")
                 .choices(choices)
-                .help("The firmware types to include in x8m_all_fw.bin.bin.\nOne or more types separated with space.");
+                .help("The firmware types to include in x8m_all_fw.bin.\nOne or more types separated with space.");
 
         parser.addArgument("-c")
                 .dest("md5ignore")
@@ -67,7 +67,7 @@ public class Main {
                 .required(false)
                 .type(String.class)
                 .setDefault("")
-                .metavar("<x8m_all_fw.bin.bin>")
+                .metavar("<x8m_all_fw.bin>")
                 .help("Path to outputfile. Omit to create firmware in the working directory.");
 
         try {
