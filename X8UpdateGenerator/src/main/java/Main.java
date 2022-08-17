@@ -26,7 +26,7 @@ public class Main {
         ArgumentParser parser = ArgumentParsers.newFor("Main")
                 .locale(Locale.ENGLISH)
                 .build()
-                .description("Generate fr_firmware.bin images for the Fimi X8 SE");
+                .description("Generate fr_firmware.bin images for the Fimi X8 Mini");
 
         parser.addArgument("-f")
                 .dest("fwfolder")
@@ -80,7 +80,7 @@ public class Main {
         Namespace res = doArgParserstuff(args);
 
         System.out.println();
-        System.out.println(">>>>FIMI X8 SE firmware file generator<<<<");
+        System.out.println(">>>>FIMI X8 mini firmware file generator<<<<");
         System.out.println();
 
         Path inputfile = Paths.get(res.getString("jsonfile"));
@@ -133,7 +133,7 @@ public class Main {
 
         List<FirmwareType> firmwareTypes = new ArrayList<>();
         if(updatetypes == null || updatetypes.isEmpty()){
-            SimpleLogger.log(SimpleLogger.LogType.INFO, "No firmware type specified, will only parse the firmware JSON file and try to download all missing FIMI X8 SE firmware images");
+            SimpleLogger.log(SimpleLogger.LogType.INFO, "No firmware type specified, will only parse the firmware JSON file and try to download all missing FIMI X8 Mini firmware images");
         }
         else {
             for(String choice : updatetypes) {
@@ -153,7 +153,7 @@ public class Main {
             SimpleLogger.log(SimpleLogger.LogType.DEBUG, "Got " + upfirewareDtos.size() + " firmwares.");
 
             upfirewareDtos = UpdateUtil.filterX8sFirmware(upfirewareDtos);
-            SimpleLogger.log(SimpleLogger.LogType.DEBUG, upfirewareDtos.size() + " are FIMI X8 SE firmwares.");
+            SimpleLogger.log(SimpleLogger.LogType.DEBUG, upfirewareDtos.size() + " are FIMI X8 Mini firmwares.");
 
             List<FwInfo> fwInfos = UpdateUtil.toFwInfo(upfirewareDtos);
 

@@ -21,12 +21,12 @@ import java.util.List;
 
 public class UpdateUtil {
 
-    public static final String fimi_api_url_de = "https://fimiservice-newus.mi-ae.com/v3/firmware/getFirmwareDetail";
+    public static final String fimi_api_url_de = "http://paas-frankfurt.fimi.com/fimi-cms-web-interface/v3/firmware/getFirmwareDetail";
 
     public static List<UpfirewareDto> filterX8sFirmware(List<UpfirewareDto> list) {
         List<UpfirewareDto> upfirewareDtoList = new ArrayList();
         for (UpfirewareDto dto : list) {
-            if (isX8sFirmware(dto)) {
+            if (isX8mFirmware(dto)) {
                 boolean normalUpdate = true;//localFwEntity.getLogicVersion() < dto.getLogicVersion() && "0".equals(dto.getForceSign());
                 boolean forceUpdate = false;//localFwEntity.getLogicVersion() < dto.getLogicVersion() && "2".equals(dto.getForceSign());
                 boolean ingoreUpdate = false;//localFwEntity.getLogicVersion() != dto.getLogicVersion() && "1".equals(dto.getForceSign());
@@ -112,38 +112,61 @@ public class UpdateUtil {
         return false;
     }
 
-    public static boolean isX8sFirmware(UpfirewareDto dto) {
-        if (dto.getType() == 0 && dto.getModel() == 3) {
+    // public static boolean isX8sFirmware(UpfirewareDto dto) {
+    //     if (dto.getType() == 0 && dto.getModel() == 3) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 1 && dto.getModel() == 3) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 9 && dto.getModel() == 1) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 11 && dto.getModel() == 3) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 12 && dto.getModel() == 3) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 14 && dto.getModel() == 0) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 3 && dto.getModel() == 6) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 5 && dto.getModel() == 3) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 10 && dto.getModel() == 3) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 4 && dto.getModel() == 2) {
+    //         return true;
+    //     }
+    //     if (dto.getType() == 13 && dto.getModel() == 1) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    public static boolean isX8mFirmware(UpfirewareDto dto) {
+        if (dto.getType() == 0 && dto.getModel() == 7) {
+            // FC
             return true;
         }
-        if (dto.getType() == 1 && dto.getModel() == 3) {
+        if (dto.getType() == 11 && dto.getModel() == 5) {
+            // RC_RELAY
             return true;
         }
-        if (dto.getType() == 9 && dto.getModel() == 1) {
+        if (dto.getType() == 12 && dto.getModel() == 5) {
+            // FC_RELAY
             return true;
         }
-        if (dto.getType() == 11 && dto.getModel() == 3) {
+        if (dto.getType() == 14 && dto.getModel() == 3) {
+            // ESC
             return true;
         }
-        if (dto.getType() == 12 && dto.getModel() == 3) {
-            return true;
-        }
-        if (dto.getType() == 14 && dto.getModel() == 0) {
-            return true;
-        }
-        if (dto.getType() == 3 && dto.getModel() == 6) {
-            return true;
-        }
-        if (dto.getType() == 5 && dto.getModel() == 3) {
-            return true;
-        }
-        if (dto.getType() == 10 && dto.getModel() == 3) {
-            return true;
-        }
-        if (dto.getType() == 4 && dto.getModel() == 2) {
-            return true;
-        }
-        if (dto.getType() == 13 && dto.getModel() == 1) {
+        if (dto.getType() == 4 && dto.getModel() == 9) {
+            // CAMERA
             return true;
         }
         return false;

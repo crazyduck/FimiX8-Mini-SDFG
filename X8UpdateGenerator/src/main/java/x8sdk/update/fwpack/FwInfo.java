@@ -89,6 +89,7 @@ public class FwInfo implements Serializable {
     }
 
     public FirmwareType getFirmwareType(){
+        // X8SE
         if (this.typeId == 0 && this.modelId == 3) {
             return FirmwareType.FC;
         }
@@ -122,6 +123,38 @@ public class FwInfo implements Serializable {
         if (this.typeId == 13 && this.modelId == 1) {
 
         }
+        // X8Mini
+        if (this.typeId == 0 && this.modelId == 7) {
+            return FirmwareType.FC;
+        }
+        if (this.typeId == 11 && this.modelId == 5) {
+            return FirmwareType.RC_RELAY;
+        }
+        if (this.typeId == 12 && this.modelId == 5) {
+            return FirmwareType.FC_RELAY;
+        }
+        if (this.typeId == 14 && this.modelId == 3) {
+            return FirmwareType.ESC;
+        }
+        if (this.typeId == 4 && this.modelId == 9) {
+            return FirmwareType.CAMERA;
+        }
+        // if (this.typeId == 10 && this.modelId == 3) {
+        //     return FirmwareType.NFZ;
+        // }
+        
+        // if (this.typeId == 3 && this.modelId == 6) {
+        //     return FirmwareType.GIMBAL;
+        // }
+        // if (this.typeId == 5 && this.modelId == 3) {
+            
+        // }
+        // if (this.typeId == 9 && this.modelId == 1) {
+        //     return FirmwareType.OTA;
+        // }
+        // if (this.typeId == 13 && this.modelId == 1) {
+
+        // }
         return FirmwareType.UNKNOWN;
     }
 
