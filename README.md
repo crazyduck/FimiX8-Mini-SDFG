@@ -2,12 +2,13 @@
 
 ### Generate sd-card-flashable fr_firmware.bin images for Fimi X8 Mini
 
-# Changes to wladimir-computin/FimiX8-SDFG
+## Changes to wladimir-computin/FimiX8-SDFG
 
 - Changing all text snippets to X8 Mini
 - Changing the Type and model identifcation section, to determine X8 Mini Firmwares
+- Making the gradle stuff compatible to work with Java 17 and Gradle 7.5.1
 
-### Original Content of wladimir-computin/FimiX8-SDFG Readme:
+# Original Content of wladimir-computin/FimiX8-SDFG Readme:
 
 ## General Information
 
